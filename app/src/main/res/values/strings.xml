@@ -1,0 +1,7 @@
+<resources>
+	<string name="app_name">Currency_price</string>
+	<string name="title_currency">Currency rates</string>
+	<string name="price_title">Price:</string>
+	<string name="currency_title">Currency:</string>
+	<string name="format">%.2f</string>
+</resources>
