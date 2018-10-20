@@ -16,29 +16,51 @@ import javax.inject.Inject
 @PerScreen
 class CurrencyAdapter @Inject constructor(private val formatHelper: FormatHelper) : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
 
-	private var currencyList: MutableList<CurrencyInfo> = mutableListOf()
+	private var newCurrencyList: MutableList<CurrencyInfo> = mutableListOf()
+	private var oldCurrencyList: MutableList<CurrencyInfo> = mutableListOf()
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		val v = LayoutInflater.from(parent.context).inflate(R.layout.currency_item_layout, parent, false)
-		return ViewHolder(v)
+		return ViewHolder(v, formatHelper)
 	}
 
-	override fun getItemCount() = currencyList.size
+	override fun getItemCount() = newCurrencyList.size
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-		val currency = currencyList[position]
-		holder.valueTxt.text = formatHelper.formatCurrency(currency.price)
-		holder.currencyTxt.text = currency.symbol
+		val newCurrency = newCurrencyList[position]
+		val oldCurrency = oldCurrencyList.getOrNull(position)
+
+		holder.bindData(oldCurrency, newCurrency)
 	}
 
 	fun setCurrencyList(currencyListIn: List<CurrencyInfo>) {
 
-		if (!currencyList.isEmpty())
-			currencyList.clear()
+		if (!newCurrencyList.isEmpty()) {
+			oldCurrencyList.clear()
+			oldCurrencyList.addAll(newCurrencyList)
+			newCurrencyList.clear()
+		}
 
-		currencyList.addAll(currencyListIn)
-		notifyItemRangeInserted(0, currencyListIn.size)
+		newCurrencyList.addAll(currencyListIn)
+		notifyDataSetChanged()
 	}
 
-	inner class ViewHolder(override val containerView: View) : RecyclerView.ViewHolder(containerView), LayoutContainer
+	inner class ViewHolder(override val containerView: View, private val formatHelper: FormatHelper) : RecyclerView.ViewHolder(containerView), LayoutContainer {
+
+		fun bindData(oldCurrencyItem: CurrencyInfo?, newCurrencyInfo: CurrencyInfo) {
+
+			valueTxt.text = formatHelper.formatCurrency(newCurrencyInfo.price)
+			currencyTxt.text = newCurrencyInfo.symbol
+
+			oldCurrencyItem?.let {
+
+				if ((newCurrencyInfo.compareTo(it)) >= 0) {
+					valueTxt.setTextColor(containerView.context.getColor(R.color.colorHigher))
+				} else {
+					valueTxt.setTextColor(containerView.context.getColor(R.color.colorLower))
+				}
+			}
+
+		}
+	}
 }

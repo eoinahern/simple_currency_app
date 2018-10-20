@@ -36,11 +36,6 @@ class CurrencyActivity : AppCompatActivity() {
 		supportActionBar?.setTitle(R.string.title_currency)
 	}
 
-	override fun onResume() {
-		super.onResume()
-	}
-
-
 	private fun initViewModel() {
 
 		viewModel = ViewModelProviders.of(this, viewModelFactory).get(CurrencyViewModel::class.java)
@@ -70,8 +65,8 @@ class CurrencyActivity : AppCompatActivity() {
 
 	}
 
-	override fun onPause() {
-		super.onPause()
+	private fun showError() {
+
 	}
 
 	override fun onDestroy() {

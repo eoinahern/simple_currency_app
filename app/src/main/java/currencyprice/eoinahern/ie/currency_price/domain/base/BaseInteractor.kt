@@ -1,4 +1,4 @@
-package currencyprice.eoinahern.ie.currency_price.domain
+package currencyprice.eoinahern.ie.currency_price.domain.base
 
 import io.reactivex.Observable
 import io.reactivex.Observer

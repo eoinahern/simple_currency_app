@@ -59,6 +59,7 @@
 			android:layout_gravity="center"
 			android:layout_marginLeft="5dp"
 			android:fontFamily="@font/roboto"
+			android:textColor="@color/colorHigher"
 			android:textSize="18dp"
 			tools:text="$10.00" />
 

@@ -1,17 +1,20 @@
 package currencyprice.eoinahern.ie.currency_price.ui
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import currencyprice.eoinahern.ie.currency_price.data.model.CurrencyInfo
 import currencyprice.eoinahern.ie.currency_price.di.scope.PerScreen
+import currencyprice.eoinahern.ie.currency_price.domain.base.BaseObserver
 import currencyprice.eoinahern.ie.currency_price.domain.currency.GetCurrencyInteractor
-import io.reactivex.Observer
+import currencyprice.eoinahern.ie.currency_price.domain.currency.GetCurrencyRepeatInteractor
 import io.reactivex.disposables.Disposable
 import javax.inject.Inject
 
 @PerScreen
-class CurrencyViewModel @Inject constructor(private val getCurrencyInteractor: GetCurrencyInteractor) : ViewModel() {
+class CurrencyViewModel @Inject constructor(private val getCurrencyInteractor: GetCurrencyInteractor,
+											private val getCurrencyRepeatInteractor: GetCurrencyRepeatInteractor) : ViewModel() {
 
 	private var currencyList: MutableLiveData<List<CurrencyInfo>> = MutableLiveData()
 	private var errorStr: MutableLiveData<String> = MutableLiveData()
@@ -20,18 +23,9 @@ class CurrencyViewModel @Inject constructor(private val getCurrencyInteractor: G
 
 	fun currencyError(): LiveData<String> = errorStr
 
-	//initial call
-	fun initGetCurrency() {
-
-	}
-
-	//update while activity open
 	fun updateCurrencyData() {
 
-
-		getCurrencyInteractor.execute(object : Observer<List<CurrencyInfo>> {
-			override fun onComplete() {
-			}
+		getCurrencyInteractor.execute(object : BaseObserver<List<CurrencyInfo>>() {
 
 			override fun onSubscribe(d: Disposable) {
 				getCurrencyInteractor.addToCompositDisposable(d)
@@ -39,6 +33,7 @@ class CurrencyViewModel @Inject constructor(private val getCurrencyInteractor: G
 
 			override fun onNext(list: List<CurrencyInfo>) {
 				currencyList.postValue(list)
+				executeRepeating()
 			}
 
 			override fun onError(e: Throwable) {
@@ -47,8 +42,26 @@ class CurrencyViewModel @Inject constructor(private val getCurrencyInteractor: G
 		})
 	}
 
+	private fun executeRepeating() {
+
+		getCurrencyRepeatInteractor.execute(object : BaseObserver<List<CurrencyInfo>>() {
+			override fun onNext(list: List<CurrencyInfo>) {
+				currencyList.value = list
+			}
+
+			override fun onError(e: Throwable) {
+				Log.d("error loading", "error")
+			}
+
+			override fun onSubscribe(d: Disposable) {
+				getCurrencyRepeatInteractor.addToCompositDisposable(d)
+			}
+		})
+	}
+
 
 	fun unsubscribe() {
 		getCurrencyInteractor.unsubscribe()
+		getCurrencyRepeatInteractor.unsubscribe()
 	}
 }
