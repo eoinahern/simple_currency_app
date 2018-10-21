@@ -59,7 +59,6 @@ class CurrencyViewModel @Inject constructor(private val getCurrencyInteractor: G
 		})
 	}
 
-
 	fun unsubscribe() {
 		getCurrencyInteractor.unsubscribe()
 		getCurrencyRepeatInteractor.unsubscribe()

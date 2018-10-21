@@ -1,9 +1,14 @@
 package currencyprice.eoinahern.ie.currency_price.di.module
 
+import android.content.Context
+import androidx.room.Room
 import com.squareup.moshi.Moshi
 import currencyprice.eoinahern.ie.currency_price.CurrencyApp
 import currencyprice.eoinahern.ie.currency_price.data.api.CurrencyApi
+import currencyprice.eoinahern.ie.currency_price.data.database.CurrencyDao
+import currencyprice.eoinahern.ie.currency_price.data.database.CurrencyDatabase
 import currencyprice.eoinahern.ie.currency_price.tools.API_ENDPOINT
+import currencyprice.eoinahern.ie.currency_price.tools.DB_NAME
 import dagger.Module
 import dagger.Provides
 import retrofit2.Retrofit
@@ -36,4 +41,16 @@ class AppModule constructor(private val currencyApp: CurrencyApp) {
 				.build().create(CurrencyApi::class.java)
 	}
 
+	@Provides
+	@Singleton
+	fun getDatabase(context: Context): CurrencyDatabase {
+
+		return Room.databaseBuilder(context, CurrencyDatabase::class.java, DB_NAME)
+				.fallbackToDestructiveMigration()
+				.build()
+	}
+
+	@Provides
+	@Singleton
+	fun getDao(currencyDB: CurrencyDatabase): CurrencyDao = currencyDB.CurrencyDao()
 }

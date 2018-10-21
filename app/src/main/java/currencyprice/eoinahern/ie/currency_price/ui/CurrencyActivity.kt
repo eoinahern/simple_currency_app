@@ -2,6 +2,7 @@ package currencyprice.eoinahern.ie.currency_price.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -28,6 +29,7 @@ class CurrencyActivity : AppCompatActivity() {
 		setupToolbar()
 		setupRecycler()
 		initViewModel()
+		showLoading()
 		viewModel.updateCurrencyData()
 	}
 
@@ -42,12 +44,14 @@ class CurrencyActivity : AppCompatActivity() {
 
 		viewModel.currencyList().observe(this,
 				Observer<List<CurrencyInfo>> { currencyList ->
+					hideLoading()
 					adapter.setCurrencyList(currencyList)
 				})
 
 		viewModel.currencyError().observe(this,
 				Observer<String> {
-					println(it)
+					hideLoading()
+					showError()
 				})
 	}
 
@@ -58,15 +62,16 @@ class CurrencyActivity : AppCompatActivity() {
 
 
 	private fun showLoading() {
-
+		loading.visibility = View.VISIBLE
 	}
 
 	private fun hideLoading() {
-
+		loading.visibility = View.GONE
 	}
 
 	private fun showError() {
-
+		hideLoading()
+		error.visibility = View.VISIBLE
 	}
 
 	override fun onDestroy() {

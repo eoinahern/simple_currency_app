@@ -30,6 +30,7 @@ dependencies {
     final LIFECYCLE_VERSION = "2.0.0"
     final RETROFIT_VERSION = "2.4.0"
     final MOSHI_VERSION = "1.6.0"
+    final ROOM_VERSION ="1.1.1"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
@@ -59,6 +60,12 @@ dependencies {
 
     implementation "com.squareup.moshi:moshi:$MOSHI_VERSION"
     kapt  "com.squareup.moshi:moshi-kotlin-codegen:$MOSHI_VERSION"
+
+    implementation 'me.zhanghai.android.materialprogressbar:library:1.4.2'
+
+    implementation "android.arch.persistence.room:runtime:$ROOM_VERSION"
+    kapt "android.arch.persistence.room:compiler:$ROOM_VERSION"
+    implementation "android.arch.persistence.room:rxjava2:$ROOM_VERSION"
 }
 
 androidExtensions {

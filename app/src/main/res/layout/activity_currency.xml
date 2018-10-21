@@ -7,10 +7,10 @@
 	tools:context=".ui.CurrencyActivity">
 
 	<androidx.appcompat.widget.Toolbar
-		android:layout_width="match_parent"
-		android:layout_height="?actionBarSize"
 		android:id="@+id/toolbar"
-		style="@style/appBarStyle">
+		style="@style/appBarStyle"
+		android:layout_width="match_parent"
+		android:layout_height="?actionBarSize">
 
 
 	</androidx.appcompat.widget.Toolbar>
@@ -22,10 +22,40 @@
 		app:layout_constraintTop_toBottomOf="@id/toolbar">
 
 		<androidx.recyclerview.widget.RecyclerView
-			android:layout_width="match_parent"
-			android:layout_height="match_parent"
 			android:id="@+id/recycler"
-			/>
+			android:layout_width="match_parent"
+			android:layout_height="match_parent" />
+
+		<LinearLayout
+			android:id="@+id/loading"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:orientation="vertical">
+
+			<me.zhanghai.android.materialprogressbar.MaterialProgressBar
+				android:layout_width="60dp"
+				android:layout_height="60dp" />
+
+			<TextView
+				android:layout_width="wrap_content"
+				android:layout_height="wrap_content"
+				android:layout_gravity="center_horizontal"
+				android:gravity="center"
+				android:text="@string/loading"
+				android:textColor="@color/colorAccent"
+				android:textSize="14dp" />
+		</LinearLayout>
+
+		<TextView
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:id="@+id/error"
+			android:text="@string/error_loading"
+			android:textColor="@color/colorAccent"
+			android:textSize="18dp"
+			android:visibility="gone" />
 
 
 	</FrameLayout>

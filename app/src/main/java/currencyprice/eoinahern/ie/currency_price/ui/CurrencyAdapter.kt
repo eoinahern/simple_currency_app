@@ -17,7 +17,6 @@ import javax.inject.Inject
 class CurrencyAdapter @Inject constructor(private val formatHelper: FormatHelper) : RecyclerView.Adapter<CurrencyAdapter.ViewHolder>() {
 
 	private var newCurrencyList: MutableList<CurrencyInfo> = mutableListOf()
-	private var oldCurrencyList: MutableList<CurrencyInfo> = mutableListOf()
 
 	override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
 		val v = LayoutInflater.from(parent.context).inflate(R.layout.currency_item_layout, parent, false)
@@ -28,18 +27,13 @@ class CurrencyAdapter @Inject constructor(private val formatHelper: FormatHelper
 
 	override fun onBindViewHolder(holder: ViewHolder, position: Int) {
 		val newCurrency = newCurrencyList[position]
-		val oldCurrency = oldCurrencyList.getOrNull(position)
-
-		holder.bindData(oldCurrency, newCurrency)
+		holder.bindData(newCurrency)
 	}
 
 	fun setCurrencyList(currencyListIn: List<CurrencyInfo>) {
 
-		if (!newCurrencyList.isEmpty()) {
-			oldCurrencyList.clear()
-			oldCurrencyList.addAll(newCurrencyList)
+		if (!newCurrencyList.isEmpty())
 			newCurrencyList.clear()
-		}
 
 		newCurrencyList.addAll(currencyListIn)
 		notifyDataSetChanged()
@@ -47,20 +41,16 @@ class CurrencyAdapter @Inject constructor(private val formatHelper: FormatHelper
 
 	inner class ViewHolder(override val containerView: View, private val formatHelper: FormatHelper) : RecyclerView.ViewHolder(containerView), LayoutContainer {
 
-		fun bindData(oldCurrencyItem: CurrencyInfo?, newCurrencyInfo: CurrencyInfo) {
+		fun bindData(newCurrencyInfo: CurrencyInfo) {
 
 			valueTxt.text = formatHelper.formatCurrency(newCurrencyInfo.price)
 			currencyTxt.text = newCurrencyInfo.symbol
 
-			oldCurrencyItem?.let {
-
-				if ((newCurrencyInfo.compareTo(it)) >= 0) {
-					valueTxt.setTextColor(containerView.context.getColor(R.color.colorHigher))
-				} else {
-					valueTxt.setTextColor(containerView.context.getColor(R.color.colorLower))
-				}
+			if (newCurrencyInfo.isHigherOrEqual) {
+				valueTxt.setTextColor(containerView.context.getColor(R.color.colorHigher))
+			} else {
+				valueTxt.setTextColor(containerView.context.getColor(R.color.colorLower))
 			}
-
 		}
 	}
 }

@@ -4,4 +4,6 @@
 	<string name="price_title">Price:</string>
 	<string name="currency_title">Currency:</string>
 	<string name="format">%.2f</string>
+	<string name="loading">loading!</string>
+	<string name="error_loading">Error loading data!</string>
 </resources>
